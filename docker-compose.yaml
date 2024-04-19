@@ -1,0 +1,27 @@
+services:
+  db:
+    container_name: simple-vocab-postgres-db
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - vocab_db
+  be:
+    container_name: simple-vocab-be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - vocab_db
+    volumes:
+      - ./:/build
+
+networks:
+  vocab_db:
